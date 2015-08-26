@@ -160,7 +160,7 @@ class source:
                 except:
                     pass
 
-            if not all(i['quality'] in ['CAM', 'SCR'] for i in sources): 
+            if not all(i['quality'] in ['CAM', 'SCR'] for i in sources):
                 sources = [i for i in sources if not i['quality'] in ['CAM', 'SCR']]
 
             return sources

@@ -29,19 +29,20 @@ import json
 
 version = u"2.5.1"
 plugin = u"CommonFunctions-" + version
-print plugin
 
 USERAGENT = u"Mozilla/5.0 (Windows NT 6.2; Win64; x64; rv:16.0.1) Gecko/20121011 Firefox/16.0.1"
+try:
+    if hasattr(sys.modules["__main__"], "xbmc"):
+        xbmc = sys.modules["__main__"].xbmc
+    else:
+        import xbmc
 
-if hasattr(sys.modules["__main__"], "xbmc"):
-    xbmc = sys.modules["__main__"].xbmc
-else:
-    import xbmc
-
-if hasattr(sys.modules["__main__"], "xbmcgui"):
-    xbmcgui = sys.modules["__main__"].xbmcgui
-else:
-    import xbmcgui
+    if hasattr(sys.modules["__main__"], "xbmcgui"):
+        xbmcgui = sys.modules["__main__"].xbmcgui
+    else:
+        import xbmcgui
+except:
+    from modules.xbmcadapter import xbmc, xbmcgui
 
 if hasattr(sys.modules["__main__"], "dbg"):
     dbg = sys.modules["__main__"].dbg
@@ -116,7 +117,7 @@ def getParameters(parameterString):
         if (len(command) > 0):
             splitCommand = command.split('=')
             key = splitCommand[0]
-            try: 
+            try:
                 value = splitCommand[1].encode("utf-8")
             except:
                 log("Error utf-8 encoding argument value: " + repr(splitCommand[1]))
@@ -320,7 +321,7 @@ def extractJS(data, function=False, variable=False, match=False, evaluate=False,
         if function:
             tmp_lst = re.compile(function + '\(.*?\).*?;', re.M | re.S).findall(script)
         elif variable:
-            tmp_lst = re.compile(variable + '[ ]+=.*?;', re.M | re.S).findall(script)            
+            tmp_lst = re.compile(variable + '[ ]+=.*?;', re.M | re.S).findall(script)
         else:
             tmp_lst = [script]
         if len(tmp_lst) > 0:
@@ -354,7 +355,7 @@ def extractJS(data, function=False, variable=False, match=False, evaluate=False,
             elif variable:
                 tlst = re.compile(variable +".*?=.*?;", re.M | re.S).findall(lst[i])
                 data = []
-                for tmp in tlst: # This breaks for some stuff. "ad_tag": "http://ad-emea.doubleclick.net/N4061/pfadx/com.ytpwatch.entertainment/main_563326'' # ends early, must end with } 
+                for tmp in tlst: # This breaks for some stuff. "ad_tag": "http://ad-emea.doubleclick.net/N4061/pfadx/com.ytpwatch.entertainment/main_563326'' # ends early, must end with }
                     cont_char = tmp[0]
                     cont_char = tmp[tmp.find("=") + 1:].strip()
                     cont_char = cont_char[0]
@@ -525,7 +526,7 @@ def makeUTF8(data):
         s = u""
         for i in data:
             try:
-                i.decode("utf8", "xmlcharrefreplace") 
+                i.decode("utf8", "xmlcharrefreplace")
             except:
                 log("Can't convert character", 4)
                 continue

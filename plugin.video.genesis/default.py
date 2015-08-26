@@ -20,7 +20,16 @@
 
 
 import urlparse,sys
+if '.py' in sys.argv[0]:
+    sys.argv = sys.argv[1:]
 params = dict(urlparse.parse_qsl(sys.argv[2].replace('?','')))
+
+
+import logging
+LOG_FILENAME = '/home/keeganmccallum/test.log'
+logging.basicConfig(filename=LOG_FILENAME,level=logging.DEBUG)
+
+logging.debug(sys.argv)
 
 
 try:

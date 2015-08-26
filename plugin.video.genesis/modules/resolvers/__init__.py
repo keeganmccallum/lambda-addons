@@ -22,8 +22,8 @@
 import re
 import urllib
 import urlparse
-import realdebrid
-import premiumize
+# import realdebrid
+# import premiumize
 
 
 def request(url):
@@ -31,10 +31,10 @@ def request(url):
         if '</regex>' in url:
             import regex ; url = regex.resolve(url)
 
-        rd = realdebrid.resolve(url)
-        if not rd == None: return rd
-        pz = premiumize.resolve(url)
-        if not pz == None: return pz
+        # rd = realdebrid.resolve(url)
+        # if not rd == None: return rd
+        # pz = premiumize.resolve(url)
+        # if not pz == None: return pz
 
         if url.startswith('rtmp'):
             if len(re.compile('\s*timeout=(\d*)').findall(url)) == 0: url += ' timeout=10'

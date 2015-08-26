@@ -35,6 +35,14 @@ class source:
 
 
     def get_show(self, imdb, tvdb, show, show_alt, year):
+
+
+        # import logging
+        # LOG_FILENAME = '/home/keeganmccallum/test.log'
+        # logging.basicConfig(filename=LOG_FILENAME,level=logging.DEBUG)
+
+        # logging.debug(','.join([imdb, tvdb, show, show_alt, year]))
+
         try:
             result = client.source(self.base_link)
             if not "'index show'" in result:

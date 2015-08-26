@@ -49,8 +49,10 @@ def request(url, close=True, error=False, proxy=None, post=None, headers=None, m
         except:
             pass
 
-        try: headers.update(headers)
-        except: headers = {}
+        try:
+            headers.update(headers)
+        except:
+            headers = {}
         if 'User-Agent' in headers:
             pass
         elif not mobile == True:

@@ -112,13 +112,13 @@ class source:
 
 
     def resolve(self, url):
-        try:
+        # try:
             if url.startswith('stack://'): return url
 
             url = client.request(url, output='geturl')
             if 'requiressl=yes' in url: url = url.replace('http://', 'https://')
             else: url = url.replace('https://', 'http://')
             return url
-        except:
+        # except:
             return
 

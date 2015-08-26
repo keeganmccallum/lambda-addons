@@ -33,12 +33,12 @@ import datetime
 import time
 import pkgutil
 import threading
-from modules.libraries import control
-from modules.libraries import cleantitle
-from modules.libraries import client
-from modules.libraries import ep_redirect
-from modules.resolvers import realdebrid
-from modules.resolvers import premiumize
+# from modules.libraries import control
+# from modules.libraries import cleantitle
+# from modules.libraries import client
+# from modules.libraries import ep_redirect
+# from modules.resolvers import realdebrid
+# from modules.resolvers import premiumize
 from modules import resolvers
 
 
@@ -49,7 +49,7 @@ class sources:
 
 
     def play(self, name, title, year, imdb, tvdb, season, episode, show, show_alt, date, genre, url):
-        try:
+        # try:
             if show == None: content = 'movie'
             else: content = 'episode'
 
@@ -58,36 +58,36 @@ class sources:
             self.sources = self.sourcesFilter()
 
 
-            if control.window.getProperty('PseudoTVRunning') == 'True':
-                url = self.sourcesDirect()
+            # if control.window.getProperty('PseudoTVRunning') == 'True':
+            #     url = self.sourcesDirect()
 
-            elif url == 'dialog://':
-                url = self.sourcesDialog()
+            # elif url == 'dialog://':
+            #     url = self.sourcesDialog()
 
-            elif url == 'direct://':
-                url = self.sourcesDirect()
+            # elif url == 'direct://':
+            #     url = self.sourcesDirect()
 
-            elif not control.infoLabel('Container.FolderPath').startswith('plugin://') and control.setting('autoplay_library') == 'false':
-                url = self.sourcesDialog()
+            # elif not control.infoLabel('Container.FolderPath').startswith('plugin://') and control.setting('autoplay_library') == 'false':
+            #     url = self.sourcesDialog()
 
-            elif control.infoLabel('Container.FolderPath').startswith('plugin://') and control.setting('autoplay') == 'false':
-                url = self.sourcesDialog()
+            # elif control.infoLabel('Container.FolderPath').startswith('plugin://') and control.setting('autoplay') == 'false':
+            #     url = self.sourcesDialog()
 
-            else:
-                url = self.sourcesDirect()
+            # else:
+            url = self.sourcesDirect()
 
             if url == None: raise Exception()
             if url == 'close://': return
 
-            if control.setting('playback_info') == 'true':
-                control.infoDialog(self.selectedSource, heading=name)
+            # if control.setting('playback_info') == 'true':
+            #     control.infoDialog(self.selectedSource, heading=name)
 
-            from modules.libraries.player import player
-            player().run(content, name, url, imdb, tvdb)
+            # from modules.libraries.player import player
+            # player().run(content, name, url, imdb, tvdb)
 
             return url
-        except:
-            control.infoDialog(control.lang(30308).encode('utf-8'))
+        # except:
+            # control.infoDialog(control.lang(30308).encode('utf-8'))
             pass
 
 
@@ -187,17 +187,17 @@ class sources:
 
         threads = []
 
-        control.makeFile(control.dataPath)
-        self.sourceFile = control.cachesourcesFile
+        # control.makeFile(control.dataPath)
+        # self.sourceFile = control.cachesourcesFile
 
         sourceDict = [i[0] for i in sourceDict if i[1] == 'true']
 
         if content == 'movie':
-            title = cleantitle.normalize(title)
+            # title = cleantitle.normalize(title)
             for source in sourceDict: threads.append(Thread(self.getMovieSource, title, year, imdb, re.sub('_mv_tv$|_mv$|_tv$', '', source), __import__(source, globals(), locals(), [], -1).source()))
         else:
-            show, show_alt = cleantitle.normalize(show), cleantitle.normalize(show_alt)
-            season, episode = ep_redirect.get(title, year, imdb, tvdb, season, episode, show, date, genre)
+            # show, show_alt = cleantitle.normalize(show), cleantitle.normalize(show_alt)
+            # season, episode = ep_redirect.get(title, year, imdb, tvdb, season, episode, show, date, genre)
             for source in sourceDict: threads.append(Thread(self.getEpisodeSource, title, year, imdb, tvdb, date, season, episode, show, show_alt, re.sub('_mv_tv$|_mv$|_tv$', '', source), __import__(source, globals(), locals(), [], -1).source()))
 
 
@@ -463,12 +463,11 @@ class sources:
 
             source = __import__(provider, globals(), locals(), [], -1).source()
             url = source.resolve(url)
-
             try: headers = dict(urlparse.parse_qsl(url.rsplit('|', 1)[1]))
             except: headers = dict('')
 
-            result = client.request(url.split('|')[0], headers=headers, output='chunk', timeout='30')
-            if result == None: raise Exception()
+            # result = client.request(url.split('|')[0], headers=headers, output='chunk', timeout='30')
+            # if result == None: raise Exception()
             return url
         except:
             return
@@ -494,14 +493,15 @@ class sources:
 
 
     def sourcesDirect(self):
+        # print '*******', self.sources
         self.sources = [i for i in self.sources if not i['source'] in self.hostcapDict]
 
         self.sources = [i for i in self.sources if not (i['quality'] in ['1080p', 'HD'] and i['source'] in self.hosthdDict and not i['source'] in self.rdDict + self.pzDict)]
 
         self.sources = [i for i in self.sources if not i['source'] in ['furk']]
 
-        if control.setting("playback_auto_sd") == 'true':
-            self.sources = [i for i in self.sources if not i['quality'] in ['1080p', 'HD']]
+        # if control.setting("playback_auto_sd") == 'true':
+        #     self.sources = [i for i in self.sources if not i['quality'] in ['1080p', 'HD']]
 
         u = None
 
@@ -523,8 +523,10 @@ class sources:
         hosts = resolvers.info()
         hosts = [i for i in hosts if 'host' in i]
 
-        self.rdDict = realdebrid.getHosts()
-        self.pzDict = premiumize.getHosts()
+        # self.rdDict = realdebrid.getHosts()
+        # self.pzDict = premiumize.getHosts()
+        self.rdDict = []
+        self.pzDict = []
 
         self.hostlocDict = [i['netloc'] for i in hosts if i['quality'] == 'High' and i['captcha'] == False]
         try: self.hostlocDict = [i.lower() for i in reduce(lambda x, y: x+y, self.hostlocDict)]
