@@ -43,7 +43,6 @@ def getSources(video):
         video.get(arg, None) if arg is not None else None
         for arg in arguments
     ]
-    print args
     return sources().getSources(*args)
 
 
