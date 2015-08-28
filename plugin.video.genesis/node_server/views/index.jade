@@ -2,7 +2,7 @@ extends layout
 
 block content
   form(submit="/")
-    input(type="text" style="width:100%;" name="data" placeholder="Search")
+    input(type="text" name="data" placeholder="Search" style="width:100%; font-size: 3em;")
     input(type="hidden" name="action" value="search")
   br
   if data.movies && data.movies.length
