@@ -47,9 +47,9 @@ class source:
             result = result['data']['films']
 
             title = cleantitle.movie(title)
-            years = ['(%s)' % str(year), '(%s)' % str(int(year)+1), '(%s)' % str(int(year)-1)]
+            # years = ['(%s)' % str(year), '(%s)' % str(int(year)+1), '(%s)' % str(int(year)-1)]
             result = [(i['id'], i['title'].encode('utf-8')) for i in result]
-            result = [i for i in result if title == cleantitle.movie(i[1])][:2]
+            # result = [i for i in result if title == cleantitle.movie(i[1])][:2]
             result = [(i[0], self.base_link + self.detail_link % i[0]) for i in result]
             result = [(i[0], client.source(i[1])) for i in result]
             result = [(i[0], json.loads(i[1])['data']['state']) for i in result]
