@@ -2149,7 +2149,7 @@ class movies:
             self.query = query
         if not (self.query == None or self.query == ''):
             self.list = self.imdb_list3(self.query)
-            index().movieList(self.list)
+            # index().movieList(self.list)
             return self.list
 
     def favourites(self):

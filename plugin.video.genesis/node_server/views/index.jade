@@ -1,0 +1,40 @@
+extends layout
+
+block content
+  form(submit="/")
+    input(type="text" style="width:100%;" name="data" placeholder="Search")
+    input(type="hidden" name="action" value="search")
+  br
+  if data.movies && data.movies.length
+    h1="Movies"
+    each movie in data.movies
+      a(href="/?action=sources&data="+JSON.stringify(movie) style="display: inline-block; padding: 10px;")
+        img(src=movie.poster style="max-height: 300px;")
+        div= movie.name
+    br
+  if data.shows && data.shows.length
+    h1="Shows"
+    each show in data.shows
+      a(href="/?action=seasons&data="+JSON.stringify(show) style="display: inline-block; padding: 10px;")
+        img(src=show.poster style="max-height: 300px;")
+        div= show.title
+  if data.seasons
+    each season in data.seasons
+      a(href="/?action=episodes&data="+JSON.stringify(season) style="display: inline-block; padding: 10px;")
+        img(src=season.thumb style="max-height: 300px;")
+        div="Season "+season.season
+  if data.episodes
+    each episode in data.episodes
+      a(href="/?action=sources&data="+JSON.stringify(episode) style="display: inline-block; padding: 10px;")
+        img(src=episode.thumb style="max-height: 300px;")
+        div=episode.name+": "+episode.title
+      div(style="display: inline-block; padding: 10px; vertical-align: top;")="Description: "
+        div(style="width: 400px;")=episode.plot
+      br
+  if data.sources
+    each source in data.sources
+      a(href="/?action=play&data="+JSON.stringify(source))
+        div(style="padding: 10px; border: 1px solid #777;")=source.provider +" | "+ source.source +" | "+ source.quality
+  if data.source
+    video(src=data.source id="vid" controls style="width: 75%;position: relative; left: 50%; transform: translate(-50%, 0);")
+    br

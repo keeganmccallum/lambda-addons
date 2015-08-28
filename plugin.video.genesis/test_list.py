@@ -8,60 +8,63 @@ sys.modules['xbmcgui'] = xbmcgui
 sys.modules['xbmcvfs'] = xbmcvfs
 
 from modules.v4 import shows
+from modules.v4 import movies
 from modules.v4 import seasons
 from modules.v4 import episodes
 from modules.sources import sources
 
-
-def getUserSelection(options, attr):
-    for i, o in enumerate(options):
-        print str(i+1) + ". " + str(o[attr])
-    return options[input("Enter a selection number: ")-1]
+import simplejson as json
+import datetime
 
 
-def getShow(options):
-    print "Choose Show: "
-    return getUserSelection(options, 'title')
+def search(data):
+    return {"shows": shows().search(data), "movies": movies().search(data)}
 
 
-def getSeason(options):
-    print "Select Season: "
-    return getUserSelection(options, 'season')
+def getSeasons(show):
+    return seasons().get(show['title'], show['year'], show['imdb'], show['tvdb'])
 
 
-def getEpisode(options):
-    print "Select Episode: "
-    return getUserSelection(options, 'episode')
+def getEpisodes(season):
+    return episodes().get(season['show'], season['year'], season['imdb'],
+                          season['tvdb'], season['season'])
 
 
-def getQuery():
-    return raw_input("Enter TV Show to search for: ")
+def getSources(video):
+    if video.get('tvdb', '0') == '0':
+        # movie
+        arguments = ['name', 'title', 'year', 'imdb', None, None, None,
+                     None, None, None, None]
+    else:
+        # tv
+        arguments = ['name', 'title', 'year', 'imdb', 'tvdb', 'season', 'episode',
+                     'show', 'show_alt', 'date', 'genre']
+    args = [
+        video.get(arg, None) if arg is not None else None
+        for arg in arguments
+    ]
+    print args
+    return sources().getSources(*args)
 
-_shows = shows().search(getQuery())
-show = getShow(_shows)
 
-_seasons = seasons().get(show['title'], show['year'], show['imdb'], show['tvdb'])
-season = getSeason(_seasons)
+def resolveSource(source):
+    src = sources().sourcesResolve(source['url'],
+                                   source['provider']).split('|')[0]
+    return src
 
-_episodes = episodes().get(season['show'], season['year'], season['imdb'],
-                           season['tvdb'], season['season'])
-episode = getEpisode(_episodes)
-
-args = [
-    episode[arg]
-    for arg in 'name', 'title', 'year', 'imdb', 'tvdb', 'season', 'episode',
-               'show', 'show_alt', 'date', 'genre'
-]
-
-PAGE_SIZE = input("Page Size: ")
-
-_sources = map(lambda s: s.split('|')[0],
-               filter(lambda src: src is not None,
-                      [sources().sourcesResolve(i['url'], i['provider'])
-                       for i in sources().getSources(*args)[:PAGE_SIZE]]
-                      )
-               )
-
-print "Sources: "
-for i, s in enumerate(_sources):
-    print str(i+1) + ". " + s
+for line in sys.stdin:
+    # wait for input from node
+    payload = json.loads(line)
+    if payload['action'] == 'search':
+        val = search(payload['data'])
+    elif payload['action'] == 'seasons':
+        val = {"seasons": getSeasons(payload['data'])}
+    elif payload['action'] == 'episodes':
+        val = {"episodes": getEpisodes(payload['data'])}
+    elif payload['action'] == 'sources':
+        val = {"sources": getSources(payload['data'])}
+    elif payload['action'] == 'play':
+        val = {"source": resolveSource(payload['data'])}
+    else:
+        continue
+    print json.dumps(val)
