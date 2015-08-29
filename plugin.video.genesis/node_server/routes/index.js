@@ -27,7 +27,7 @@ router.get('/', function(req, res, next) {
     // end the input stream and allow the process to exit
   });
   pyshell.end(function (err) {
-    if (err) console.error(err);
+    if (err) res.status(500);
   });
 });
 
