@@ -19,6 +19,7 @@ router.get('/', function(req, res, next) {
   } catch(e) {
 
   }
+  // console.log(data)
   // console.log(JSON.stringify({action: action, data: data}))
   pyshell.send({action: action, data: data});
   pyshell.on('message', function (message) {

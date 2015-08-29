@@ -57,7 +57,7 @@ try:
     addonSources        = os.path.join(dataPath,'sources.db')
     addonCache          = os.path.join(dataPath,'cache.db')
 except:
-    # getSetting          = xbmcaddon.Addon().getSetting
+    getSetting          = xbmcaddon.Addon().getSetting
     # language            = xbmcaddon.Addon().getLocalizedString
     addonName           = "test"
     # addonVersion        = xbmcaddon.Addon().getAddonInfo("version")

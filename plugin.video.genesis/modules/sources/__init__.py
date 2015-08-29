@@ -33,7 +33,7 @@ import datetime
 import time
 import pkgutil
 import threading
-# from modules.libraries import control
+from modules.libraries import control
 # from modules.libraries import cleantitle
 # from modules.libraries import client
 # from modules.libraries import ep_redirect
@@ -493,7 +493,6 @@ class sources:
 
 
     def sourcesDirect(self):
-        # print '*******', self.sources
         self.sources = [i for i in self.sources if not i['source'] in self.hostcapDict]
 
         self.sources = [i for i in self.sources if not (i['quality'] in ['1080p', 'HD'] and i['source'] in self.hosthdDict and not i['source'] in self.rdDict + self.pzDict)]

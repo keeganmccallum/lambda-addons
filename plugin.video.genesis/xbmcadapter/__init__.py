@@ -34,7 +34,15 @@ class xbmcgui(Dummy):
 
 
 class xbmcaddon(Dummy):
-    pass
+    class Addon(Dummy):
+        def getSetting(self, id):
+            import xml.etree.ElementTree as ET
+            tree = ET.parse('../resources/settings.xml')
+            root = tree.getroot()
+            for setting in root.iter('setting'):
+                if setting.attrib.get("id", None) == id:
+                    return setting.attrib.get("default", Dummy())
+            return Dummy()
 
 
 class xbmcvfs(Dummy):
